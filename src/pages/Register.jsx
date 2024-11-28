@@ -22,7 +22,7 @@ function Register() {
         const message = Object.entries(data)[0][1];
         throw new Error(message);
       }
-      // enqueueSnackbar(error.message, { variant: "success" });
+      enqueueSnackbar("Đăng kí thành công", { variant: "success" });
     } catch (error) {
       console.log(error)
       enqueueSnackbar(error.message, { variant: "error" });

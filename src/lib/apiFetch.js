@@ -4,12 +4,13 @@ import { BACKEND_END_POINT } from "./config";
 export const apiFetch = async (url, { method, body }) => {
   const accessToken = getAccessToken();
 
+  console.log(method)
   const res = await fetch(BACKEND_END_POINT + url, {
     headers: {
       "Content-Type": "Application/json",
     //   Authorization: accessToken,
     },
-    method,
+    method: "POST",
     body
     // body: JSON.stringify(body),
   });
