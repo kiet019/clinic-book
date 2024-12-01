@@ -4,18 +4,26 @@ import { BACKEND_END_POINT } from "./config";
 export const apiFetch = async (url, { method, body }) => {
   const accessToken = getAccessToken();
 
-  console.log(method)
   const res = await fetch(BACKEND_END_POINT + url, {
     headers: {
       "Content-Type": "Application/json",
-    //   Authorization: accessToken,
+      ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     },
-    method: "POST",
-    body
+    method,
+    body,
     // body: JSON.stringify(body),
   });
 
-  const data = await res.json();
+  let data = "";
+  const contentType = res.headers.get("Content-Type");
+
+  if (contentType && contentType.includes("application/json")) {
+    data = await res.json();
+  } else {
+    data = await res.text();
+  }
+
+  console.log(data)
   return {
     data,
     status: res.ok,

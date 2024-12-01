@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SnackbarProvider, VariantType, useSnackbar } from "notistack";
+import { useSnackbar } from "notistack";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { apiFetch } from "../lib/apiFetch";
@@ -13,11 +13,10 @@ function Register() {
   const handleRegister = async (value) => {
     try {
       setIsLoading(true);
-      const res = await apiFetch("/auth/register", {
+      const { data, status } = await apiFetch("/auth/register", {
         method: "POST",
         body: JSON.stringify(value),
       });
-      const { data, status } = res;
       if (!status) {
         const message = Object.entries(data)[0][1];
         throw new Error(message);

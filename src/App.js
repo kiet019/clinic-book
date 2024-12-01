@@ -33,54 +33,60 @@ import patientProfile from "./pages/patientProfile";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { SnackbarProvider } from 'notistack';
+import { SnackbarProvider } from "notistack";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() {
   return (
     <div>
       <SnackbarProvider maxSnack={3}>
-        <Header />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/doctorProfile" element={<DoctorProfile />} />
-            <Route path="/doctorAppointment" element={<doctorAppointment />} />
-            <Route path="/patientProfile" element={<PatientProfile />} />
-            <Route path="/patientDashboard" element={<patientDashboard />} />
-            <Route path="/privacyPolicy" element={<privacyPolicy />} />
-            <Route path="/profileSettings" element={<ProfileSettings />} />
-            <Route path="/Reviews" element={<Reviews />} />
-            <Route path="/scheduleTimings" element={<ScheduleTimings />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/socialMedia" element={<socialMedia />} />
-            <Route path="/termCondition" element={<TermCondition />} />
-            <Route path="/videoCall" element={<VideoCall />} />
-            <Route path="/voiceCall" element={<VoiceCall />} />
-            <Route path="/favourites" element={<Favourites />} />
-            <Route path="/booking" element={<Booking />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/doctorRegister" element={<DoctorRegister />} />
-            <Route path="/Invoice" element={<Invoice />} />
-            <Route path="/patientProfile" element={<PatientProfile />} />
-            <Route path="/Checkout" element={<Checkout />} />
-            <Route path="/addPrescription" element={<AddPrescription />} />
-            <Route path="/addBilling" element={<AddBilling />} />
-            <Route
-              path="/doctorProfileSettings"
-              element={<DoctorProfileSettings />}
-            />
-            <Route path="/doctorDashboard" element={<DoctorDashboard />} />
-            <Route path="/bookingSuccess" element={<BookingSuccess />} />
-            <Route path="/invoiceView" element={<InvoiceView />} />
-            <Route path="/ChangePassword" element={<ChangePassword />} />
-            <Route path="/ForgotPassword" element={<ForgotPassword />} />
-            <Route path="/Appointments" element={<Appointments />} />
-          </Routes>
-        </BrowserRouter>
-        <Footer />
+        <QueryClientProvider client={new QueryClient()}>
+          <BrowserRouter>
+            <Header />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/doctorProfile" element={<DoctorProfile />} />
+              <Route
+                path="/doctorAppointment"
+                element={<doctorAppointment />}
+              />
+              <Route path="/patientProfile" element={<PatientProfile />} />
+              <Route path="/patientDashboard" element={<patientDashboard />} />
+              <Route path="/privacyPolicy" element={<privacyPolicy />} />
+              <Route path="/profileSettings" element={<ProfileSettings />} />
+              <Route path="/Reviews" element={<Reviews />} />
+              <Route path="/scheduleTimings" element={<ScheduleTimings />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/socialMedia" element={<socialMedia />} />
+              <Route path="/termCondition" element={<TermCondition />} />
+              <Route path="/videoCall" element={<VideoCall />} />
+              <Route path="/voiceCall" element={<VoiceCall />} />
+              <Route path="/favourites" element={<Favourites />} />
+              <Route path="/booking" element={<Booking />} />
+              <Route path="/chat" element={<Chat />} />
+              <Route path="/doctorRegister" element={<DoctorRegister />} />
+              <Route path="/Invoice" element={<Invoice />} />
+              <Route path="/patientProfile" element={<PatientProfile />} />
+              <Route path="/Checkout" element={<Checkout />} />
+              <Route path="/addPrescription" element={<AddPrescription />} />
+              <Route path="/addBilling" element={<AddBilling />} />
+              <Route
+                path="/doctorProfileSettings"
+                element={<DoctorProfileSettings />}
+              />
+              <Route path="/doctorDashboard" element={<DoctorDashboard />} />
+              <Route path="/bookingSuccess" element={<BookingSuccess />} />
+              <Route path="/invoiceView" element={<InvoiceView />} />
+              <Route path="/ChangePassword" element={<ChangePassword />} />
+              <Route path="/ForgotPassword" element={<ForgotPassword />} />
+              <Route path="/Appointments" element={<Appointments />} />
+            </Routes>
+            <Footer />
+          </BrowserRouter>
+        </QueryClientProvider>
       </SnackbarProvider>
     </div>
   );
