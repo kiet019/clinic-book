@@ -1,13 +1,52 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { useGetDoctor } from "../hook/useGetDoctor";
 import { useSearchParams } from "react-router-dom";
-import { StarRating } from "../components/rating/StartRating";
+import { StarRating } from "../components/Rating/StartRating";
+import * as yup from "yup";
+import { useFormik } from "formik";
+import { useSnackbar } from "notistack";
+import { apiFetch } from "../lib/apiFetch";
+import { useGetDoctorRating } from "../hook/useGetDoctorRating";
+import { DoctorRatingCard } from "../components/Rating/DoctorRatingCard";
 
 function DoctorProfile() {
   const [searchParams] = useSearchParams(); // Lấy searchParams
 
   const maDoctor = searchParams.get("maDoctor");
   const { data } = useGetDoctor({ id: maDoctor });
+  const { data: doctorRating, refetch } = useGetDoctorRating({ id: maDoctor });
+
+  const { enqueueSnackbar } = useSnackbar();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleRating = async (value) => {
+    try {
+      setIsLoading(true);
+      const res = await apiFetch("/user/rating", {
+        method: "POST",
+        body: JSON.stringify({ ...value, doctorId: maDoctor }),
+      });
+      const { data, status } = res;
+      if (!status) {
+        throw new Error(data);
+      }
+      enqueueSnackbar("Đánh giá thành công", { variant: "success" });
+      refetch();
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar(error.message, { variant: "error" });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const { values, handleChange, handleSubmit, setFieldValue } = useFormik({
+    initialValues: {
+      rating: 0,
+      comment: "",
+    },
+    onSubmit: handleRating,
+  });
 
   return (
     <div>
@@ -163,7 +202,10 @@ function DoctorProfile() {
                     </a>
                   </div>
                   <div className="clinic-booking">
-                    <a className="apt-btn" href="/Booking">
+                    <a
+                      className="apt-btn"
+                      href={"/Booking" + "?maDoctor=" + maDoctor}
+                    >
                       Đặt Lịch Hẹn
                     </a>
                   </div>
@@ -197,15 +239,6 @@ function DoctorProfile() {
                       Đánh Giá
                     </a>
                   </li>
-                  <li className="nav-item">
-                    <a
-                      className="nav-link"
-                      href="#doc_business_hours"
-                      data-toggle="tab"
-                    >
-                      Giờ Làm Việc
-                    </a>
-                  </li>
                 </ul>
               </nav>
               {/* /Menu Tab */}
@@ -223,9 +256,7 @@ function DoctorProfile() {
                       {/* Chi Tiết Về Bác Sĩ */}
                       <div className="widget about-widget">
                         <h4 className="widget-title">Về Tôi</h4>
-                        <p>
-                         {data?.bio}
-                        </p>
+                        <p>{data?.bio}</p>
                       </div>
                       {/* /Chi Tiết Về Bác Sĩ */}
                     </div>
@@ -284,25 +315,34 @@ function DoctorProfile() {
                   {/* Viết Đánh Giá */}
                   <div className="review-box">
                     <h4 className="widget-title">Đánh Giá</h4>
-                    <form>
+                    {doctorRating &&
+                      doctorRating.map((data, index) => (
+                        <DoctorRatingCard
+                          doctorRating={data}
+                          key={index}
+                          id={index + 1}
+                        />
+                      ))}
+
+                    <form onSubmit={handleSubmit}>
                       <div className="form-group">
+                        <StarRating
+                          onRatingChange={(e) => {
+                            setFieldValue("rating", e);
+                          }}
+                        />
                         <textarea
                           className="form-control"
                           placeholder="Viết Đánh Giá"
-                        ></textarea>
-                      </div>
-                      <div className="terms-accept">
-                        <div className="custom-checkbox">
-                          <input type="checkbox" id="terms_accept" />
-                          <label htmlFor="terms_accept">
-                            Tôi đã đọc và chấp nhận{" "}
-                            <a href="#">Điều Khoản &amp; Điều Kiện</a>
-                          </label>
-                        </div>
+                          name="comment"
+                          value={values.comment}
+                          onChange={handleChange}
+                        />
                       </div>
                       <div className="submit-section">
                         <button
                           type="submit"
+                          disabled={isLoading}
                           className="btn btn-primary submit-btn"
                         >
                           Thêm Đánh Giá
@@ -313,92 +353,6 @@ function DoctorProfile() {
                   {/* /Viết Đánh Giá */}
                 </div>
                 {/* /Nội Dung Đánh Giá */}
-
-                {/* Nội Dung Giờ Làm Việc */}
-                <div
-                  role="tabpanel"
-                  id="doc_business_hours"
-                  className="tab-pane fade"
-                >
-                  <div className="row">
-                    <div className="col-md-6 offset-md-3">
-                      {/* Widget Giờ Làm Việc */}
-                      <div className="widget business-widget">
-                        <div className="widget-content">
-                          <div className="listing-hours">
-                            <div className="listing-day current">
-                              <div className="day">
-                                Hôm Nay <span>5 Nov 2019</span>
-                              </div>
-                              <div className="time-items">
-                                <span className="open-status">
-                                  <span className="badge bg-success-light">
-                                    Mở Cửa
-                                  </span>
-                                </span>
-                                <span className="time">
-                                  07:00 AM - 09:00 PM
-                                </span>
-                              </div>
-                            </div>
-                            <div className="listing-day">
-                              <div className="day">Thứ Hai</div>
-                              <div className="time-items">
-                                <span className="time">
-                                  07:00 AM - 09:00 PM
-                                </span>
-                              </div>
-                            </div>
-                            <div className="listing-day">
-                              <div className="day">Thứ Ba</div>
-                              <div className="time-items">
-                                <span className="time">
-                                  07:00 AM - 09:00 PM
-                                </span>
-                              </div>
-                            </div>
-                            <div className="listing-day">
-                              <div className="day">Thứ Tư</div>
-                              <div className="time-items">
-                                <span className="time">
-                                  07:00 AM - 09:00 PM
-                                </span>
-                              </div>
-                            </div>
-                            <div className="listing-day">
-                              <div className="day">Thứ Năm</div>
-                              <div className="time-items">
-                                <span className="time">
-                                  07:00 AM - 09:00 PM
-                                </span>
-                              </div>
-                            </div>
-                            <div className="listing-day">
-                              <div className="day">Thứ Sáu</div>
-                              <div className="time-items">
-                                <span className="time">
-                                  07:00 AM - 09:00 PM
-                                </span>
-                              </div>
-                            </div>
-                            <div className="listing-day closed">
-                              <div className="day">Chủ Nhật</div>
-                              <div className="time-items">
-                                <span className="time">
-                                  <span className="badge bg-danger-light">
-                                    Đóng Cửa
-                                  </span>
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      {/* /Widget Giờ Làm Việc */}
-                    </div>
-                  </div>
-                </div>
-                {/* /Nội Dung Giờ Làm Việc */}
               </div>
             </div>
           </div>

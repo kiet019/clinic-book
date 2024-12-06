@@ -4,13 +4,14 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { apiFetch } from "../lib/apiFetch";
 import { useNavigate } from "react-router-dom";
-import { setAccessToken } from "../lib/token";
+import { setAccessToken, setRole } from "../lib/token";
 
 const validate = yup.object().shape({});
 
 function Login() {
   const { enqueueSnackbar } = useSnackbar();
   const [isLoading, setIsLoading] = useState(false);
+  const [currentRole, setCurrentRole] = useState("user");
 
   const navigate = useNavigate();
   const handleRegister = async (value) => {
@@ -24,7 +25,8 @@ function Login() {
         const message = Object.entries(data)[0][1];
         throw new Error(message);
       }
-      setAccessToken(data.token)
+      setAccessToken(data.token);
+      setRole(currentRole);
       navigate("/Home");
       enqueueSnackbar("Đăng nhập thành công", { variant: "success" });
     } catch (error) {
@@ -62,9 +64,23 @@ function Login() {
                   </div>
                   <div className="col-md-12 col-lg-6 login-right">
                     <div className="login-header">
-                      <h3>
-                        Đăng Nhập <span>Đặt Lịch Khám</span>
-                      </h3>
+                      {currentRole === "user" ? (
+                        <h3
+                          onClick={() => {
+                            setCurrentRole("doctor");
+                          }}
+                        >
+                          Bệnh Nhân <a href="#">Bạn là bác sĩ?</a>
+                        </h3>
+                      ) : (
+                        <h3
+                          onClick={() => {
+                            setCurrentRole("user");
+                          }}
+                        >
+                          Bác Sĩ <a href="#">Bạn là bệnh nhân?</a>
+                        </h3>
+                      )}
                     </div>
                     <form onSubmit={handleSubmit}>
                       <div className="form-group form-focus">
@@ -94,6 +110,7 @@ function Login() {
                       </div>
                       <button
                         className="btn btn-primary btn-block btn-lg login-btn"
+                        disabled={isLoading}
                         type="submit"
                       >
                         Đăng Nhập

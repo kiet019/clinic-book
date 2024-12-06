@@ -1,5 +1,5 @@
 import { a } from "react-router-dom";
-import { StarRating } from "../rating/StartRating";
+import { StarRating } from "../Rating/StartRating";
 
 export const DoctorCard = ({ doctor, handleChangeRating }) => {
   return (

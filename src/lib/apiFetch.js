@@ -23,7 +23,6 @@ export const apiFetch = async (url, { method, body }) => {
     data = await res.text();
   }
 
-  console.log(data)
   return {
     data,
     status: res.ok,
