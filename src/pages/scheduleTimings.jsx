@@ -7,7 +7,7 @@ import {
 } from "../lib/date";
 import { apiFetch } from "../lib/apiFetch";
 import { useSnackbar } from "notistack";
-import { useGetDoctorTimeslots } from "../hook/useGetDoctorTimeSlots";
+import { useGetCurrentDoctorTimeslots } from "../hook/useGetCurrentDoctorTimeSlots";
 import { useSearchParams } from "react-router-dom";
 
 const listTimeBreak = [10, 30, 45, 60];
@@ -42,7 +42,7 @@ function ScheduleTimings() {
   const [timeArray, setTimeArray] = useState(initValue.timeSchedule);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { data } = useGetDoctorTimeslots({ id: 6 });
+  const { data } = useGetCurrentDoctorTimeslots();
 
   useEffect(
     (e) => {

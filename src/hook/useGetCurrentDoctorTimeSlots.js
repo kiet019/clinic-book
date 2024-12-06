@@ -2,19 +2,20 @@ import { useQuery } from "@tanstack/react-query";
 import { getAccessToken } from "../lib/token";
 import { apiFetch } from "../lib/apiFetch";
 
-export const useGetProfile = () => {
+export const useGetCurrentDoctorTimeslots = () => {
   const accessToken = getAccessToken();
 
   const query = useQuery({
-    queryKey: [accessToken, 'userInfo'],
+    queryKey: [accessToken, "timeslots"],
     queryFn: async () => {
-      const { data, status } = await apiFetch("/user/info", {
+      const { data, status } = await apiFetch(`/doctors/timeslots`, {
         method: "GET",
       });
       if (!status) return null;
       else return data;
     },
-    enabled: true,
+    enabled: !!accessToken,
+    refetchOnWindowFocus: false,
   });
 
   return query;

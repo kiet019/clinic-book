@@ -1,14 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSnackbar } from "notistack";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { apiFetch } from "../lib/apiFetch";
+import { useGetProfile } from "../hook/useGetProfile";
 
 const validate = yup.object().shape({});
 
 function ProfileSettings() {
   const { enqueueSnackbar } = useSnackbar();
   const [isLoading, setIsLoading] = useState(false);
+
+  const { data } = useGetProfile();
+
+  useEffect(() => {
+    console.log(data)
+  }, [data])
 
   const handleRegister = async (value) => {
     try {
