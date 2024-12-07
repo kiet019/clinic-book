@@ -77,6 +77,13 @@ function Booking() {
     }
   };
 
+  useEffect(() => {
+    if (formatTimeslots) {
+      console.log(Object.keys(formatTimeslots));
+    }
+    console.log(formatWeek);
+  }, [formatTimeslots, formatWeek]);
+
   return (
     <div className="main-wrapper">
       {/* Breadcrumb */}
@@ -147,7 +154,7 @@ function Booking() {
                             <a
                               href="#"
                               onClick={(e) => {
-                                e.preventDefault()
+                                e.preventDefault();
                                 setCurrentWeek(currentWeek - 1);
                               }}
                             >
@@ -164,7 +171,7 @@ function Booking() {
                             <a
                               href="#"
                               onClick={(e) => {
-                                e.preventDefault()
+                                e.preventDefault();
                                 setCurrentWeek(currentWeek + 1);
                               }}
                             >

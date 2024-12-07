@@ -69,6 +69,16 @@ export const getWeekDays = (offset = 0) => {
 };
 
 export const groupAndSortTimeSlots = (timeSlots) => {
+  const daysOfWeek = [
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
+    "SUNDAY",
+  ];
+
   const grouped = timeSlots.reduce((acc, slot) => {
     const day = slot.dayOfWeek;
     if (!acc[day]) {
@@ -78,12 +88,19 @@ export const groupAndSortTimeSlots = (timeSlots) => {
     return acc;
   }, {});
 
+  daysOfWeek.forEach((day) => {
+    if (!grouped[day]) {
+      grouped[day] = [];
+    }
+  });
+
   for (const day in grouped) {
     grouped[day].sort((a, b) => a.timeStart.localeCompare(b.timeStart));
   }
 
   return grouped;
 };
+
 
 export const transformTimeSchedule = (inputData) => {
   const daysOfWeek = [

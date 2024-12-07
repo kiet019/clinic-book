@@ -11,12 +11,9 @@ function ProfileSettings() {
   const { enqueueSnackbar } = useSnackbar();
   const [isLoading, setIsLoading] = useState(false);
 
-  const { data } = useGetProfile();
-
-  useEffect(() => {
-    console.log(data)
-  }, [data])
-
+  const { data: userData } = useGetProfile();
+  const [isInitialized, setIsInitialized] = useState(false);
+  
   const handleRegister = async (value) => {
     try {
       setIsLoading(true);
@@ -38,7 +35,7 @@ function ProfileSettings() {
     }
   };
 
-  const { values, handleChange, handleSubmit } = useFormik({
+  const { values, handleChange, handleSubmit, setValues } = useFormik({
     initialValues: {
       firstName: "",
       lastName: "",
@@ -54,6 +51,25 @@ function ProfileSettings() {
     },
     onSubmit: handleRegister,
   });
+
+  useEffect(() => {
+    if (userData && !isInitialized) {
+      setValues({
+        firstName: userData.firstName || "",
+        lastName: userData.lastName || "",
+        email: userData.email || "",
+        phoneNumber: userData.phoneNumber || "",
+        address: userData.address || "",
+        city: userData.city || "",
+        state: userData.state || "",
+        zip: userData.zip || "",
+        country: userData.country || "",
+        dateOfBirth: userData.dateOfBirth || "",
+        bloodgroup: userData.bloodgroup || "",
+      });
+      setIsInitialized(true);
+    }
+  }, [userData, isInitialized, setValues]);
 
   return (
     <div>

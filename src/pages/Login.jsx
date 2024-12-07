@@ -11,7 +11,6 @@ const validate = yup.object().shape({});
 function Login() {
   const { enqueueSnackbar } = useSnackbar();
   const [isLoading, setIsLoading] = useState(false);
-  const [currentRole, setCurrentRole] = useState("user");
 
   const navigate = useNavigate();
   const handleRegister = async (value) => {
@@ -26,7 +25,8 @@ function Login() {
         throw new Error(message);
       }
       setAccessToken(data.token);
-      setRole(currentRole);
+      console.log(data)
+      setRole(data.role[0].toLowerCase())
       navigate("/Home");
       enqueueSnackbar("Đăng nhập thành công", { variant: "success" });
     } catch (error) {
@@ -64,23 +64,7 @@ function Login() {
                   </div>
                   <div className="col-md-12 col-lg-6 login-right">
                     <div className="login-header">
-                      {currentRole === "user" ? (
-                        <h3
-                          onClick={() => {
-                            setCurrentRole("doctor");
-                          }}
-                        >
-                          Bệnh Nhân <a href="#">Bạn là bác sĩ?</a>
-                        </h3>
-                      ) : (
-                        <h3
-                          onClick={() => {
-                            setCurrentRole("user");
-                          }}
-                        >
-                          Bác Sĩ <a href="#">Bạn là bệnh nhân?</a>
-                        </h3>
-                      )}
+                      <h3>Đăng nhập</h3>
                     </div>
                     <form onSubmit={handleSubmit}>
                       <div className="form-group form-focus">
