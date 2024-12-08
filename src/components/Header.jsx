@@ -8,7 +8,7 @@ function Header() {
   const navigate = useNavigate();
   const handleLogout = () => {
     setAccessToken("");
-    setRole("")
+    setRole("");
     navigate("/Login");
   };
   return (
@@ -58,30 +58,30 @@ function Header() {
                     <li>
                       <a href="/doctorDashboard">Bác Sĩ Dashboard</a>
                     </li>
-                    <li>
+                    {/* <li>
                       <a href="/Appointments">Cuộc Hẹn</a>
-                    </li>
+                    </li> */}
                     <li>
                       <a href="/scheduleTimings">Lịch</a>
                     </li>
-                    <li>
+                    {/* <li>
                       <a href="/patientProfile">Hồ Sơ Bệnh Nhân</a>
-                    </li>
-                    <li>
+                    </li> */}
+                    {/* <li>
                       <a href="/Chat">Trò Chuyện</a>
-                    </li>
-                    <li>
+                    </li> */}
+                    {/* <li>
                       <a href="/Invoice">Hóa Đơn</a>
-                    </li>
+                    </li> */}
                     <li>
                       <a href="/doctorProfileSettings">Cài Đặt Hồ Sơ Bác Sĩ</a>
                     </li>
-                    <li>
+                    {/* <li>
                       <a href="/Reviews">Đánh Giá</a>
                     </li>
                     <li>
                       <a href="/register">Đăng Ký Bác Sĩ</a>
-                    </li>
+                    </li> */}
                   </ul>
                 </li>
               )}
@@ -95,16 +95,7 @@ function Header() {
                       <a href="/Search">Tìm Kiếm Bác Sĩ</a>
                     </li>
                     <li>
-                      <a href="/doctorProfile">Hồ Sơ Bác Sĩ</a>
-                    </li>
-                    <li>
-                      <a href="/Booking">Đặt Lịch</a>
-                    </li>
-                    <li>
-                      <a href="/Checkout">Thanh Toán</a>
-                    </li>
-                    <li>
-                      <a href="/bookingSuccess">Đặt Lịch Thành Công</a>
+                      <a href="/userDashboard">Lịch Đã Đặt</a>
                     </li>
                     <li>
                       <a href="/Chat">Trò Chuyện</a>

@@ -6,16 +6,17 @@ export const useGetDoctor = ({ id }) => {
   const accessToken = getAccessToken();
 
   const query = useQuery({
-    queryKey: [accessToken, 'getDoctor'],
+    queryKey: [accessToken, "getDoctor", id],
     queryFn: async () => {
       const { data, status } = await apiFetch(`/doctors/${id}`, {
         method: "GET",
       });
+      console.log(data);
       if (!status) return null;
       else return data;
     },
     enabled: !!id && !!accessToken,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
   });
 
   return query;

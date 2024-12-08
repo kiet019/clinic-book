@@ -35,6 +35,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { SnackbarProvider } from "notistack";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import UserDashboard from "./pages/UserDashboard";
 
 function App() {
   return (
@@ -78,6 +79,7 @@ function App() {
                 element={<DoctorProfileSettings />}
               />
               <Route path="/doctorDashboard" element={<DoctorDashboard />} />
+              <Route path="/UserDashboard" element={<UserDashboard />} />
               <Route path="/bookingSuccess" element={<BookingSuccess />} />
               <Route path="/invoiceView" element={<InvoiceView />} />
               <Route path="/ChangePassword" element={<ChangePassword />} />

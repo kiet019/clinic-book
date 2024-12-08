@@ -101,8 +101,9 @@ function DoctorProfile() {
                     <StarRating rating={data?.rating} />
                     <div className="clinic-details">
                       <p className="doc-location">
-                        <i className="fas fa-map-marker-alt"></i> Newyork, Hoa
-                        Kỳ - <a href="javascript:void(0);">Lấy Đường Đi</a>
+                        <i className="fas fa-map-marker-alt"></i>{" "}
+                        {data?.address}, {data?.city}, {data?.state}
+                        <a href="javascript:void(0);">Lấy Đường Đi</a>
                       </p>
                       <ul className="clinic-gallery">
                         <li>
@@ -163,14 +164,14 @@ function DoctorProfile() {
                         <i className="far fa-thumbs-up"></i> 99%
                       </li>
                       <li>
-                        <i className="far fa-comment"></i> 35 Phản Hồi
+                        <i className="far fa-comment"></i> {data?.email}
                       </li>
                       <li>
-                        <i className="fas fa-map-marker-alt"></i> Newyork, Hoa
-                        Kỳ
+                        <i className="fas fa-map-marker-alt"></i>
+                        {data?.phoneNumber}
                       </li>
                       <li>
-                        <i className="far fa-money-bill-alt"></i> $100 mỗi giờ
+                        <i className="far fa-money-bill-alt"></i>{data?.speciality}
                       </li>
                     </ul>
                   </div>

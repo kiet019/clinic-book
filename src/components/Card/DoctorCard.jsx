@@ -1,4 +1,3 @@
-import { a } from "react-router-dom";
 import { StarRating } from "../Rating/StartRating";
 
 export const DoctorCard = ({ doctor, handleChangeRating }) => {
@@ -54,7 +53,10 @@ export const DoctorCard = ({ doctor, handleChangeRating }) => {
             </a>
           </div>
           <div className="col-6">
-            <a href="/Booking" className="btn book-btn">
+            <a
+              href={`/Booking?maDoctor=${doctor.doctorId}`}
+              className="btn book-btn"
+            >
               Đặt Lịch
             </a>
           </div>

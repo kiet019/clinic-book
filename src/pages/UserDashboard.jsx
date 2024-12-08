@@ -1,9 +1,10 @@
 import React from "react";
-import { DoctorSidebar } from "../components/Sidebar/DoctorSidebar";
 import { useGetDoctorAppointment } from "../hook/useGetDoctorAppointment";
+import { UserSidebar } from "../components/Sidebar/UserSidebar";
+import { useGetUserAppointment } from "../hook/useGetUserAppointment";
 
-function DoctorDashboard() {
-  const { data } = useGetDoctorAppointment();
+function UserDashboard() {
+  const { data } = useGetUserAppointment();
   return (
     <div>
       {/* Breadcrumb */}
@@ -34,7 +35,7 @@ function DoctorDashboard() {
           <div className="row">
             <div className="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
               {/* Profile Sidebar */}
-              <DoctorSidebar />
+              <UserSidebar />
               {/* /Profile Sidebar */}
             </div>
 
@@ -96,7 +97,6 @@ function DoctorDashboard() {
                                 </td>
                               </tr>
                             ))}
-                          {/* Add more rows as needed */}
                         </tbody>
                       </table>
                     </div>
@@ -190,4 +190,4 @@ function DoctorDashboard() {
   );
 }
 
-export default DoctorDashboard;
+export default UserDashboard;

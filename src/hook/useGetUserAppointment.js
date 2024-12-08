@@ -2,17 +2,17 @@ import { useQuery } from "@tanstack/react-query";
 import { getAccessToken } from "../lib/token";
 import { apiFetch } from "../lib/apiFetch";
 
-export const useGetProfile = () => {
+export const useGetUserAppointment = () => {
   const accessToken = getAccessToken();
 
   const query = useQuery({
-    queryKey: [accessToken, 'userInfo'],
+    queryKey: [accessToken, "userAppointment"],
     queryFn: async () => {
-      const { data, status } = await apiFetch("/user/info", {
+      const { data, status } = await apiFetch("/user/appointments", {
         method: "GET",
       });
       console.log(data)
-      if (!status) return null;
+      if (!status) return [];
       else return data;
     },
     enabled: true,

@@ -2,20 +2,20 @@ import { useQuery } from "@tanstack/react-query";
 import { getAccessToken } from "../lib/token";
 import { apiFetch } from "../lib/apiFetch";
 
-export const useGetProfile = () => {
+export const useGetDoctorProfile = () => {
   const accessToken = getAccessToken();
 
   const query = useQuery({
-    queryKey: [accessToken, 'userInfo'],
+    queryKey: [accessToken, "getDoctorProfile"],
     queryFn: async () => {
-      const { data, status } = await apiFetch("/user/info", {
+      const { data, status } = await apiFetch(`/doctors/doctorinfo`, {
         method: "GET",
       });
-      console.log(data)
+      console.log(data);
       if (!status) return null;
       else return data;
     },
-    enabled: true,
+    enabled: !!accessToken,
   });
 
   return query;

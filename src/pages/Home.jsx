@@ -7,6 +7,7 @@ import { useGetListDoctor } from "../hook/useGetListDoctor";
 
 function Home() {
   const { data, isFetching } = useGetListDoctor();
+
   const settings = {
     dots: false,
     arrows: false,

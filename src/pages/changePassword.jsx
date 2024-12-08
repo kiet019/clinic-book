@@ -3,6 +3,7 @@ import { useSnackbar } from "notistack";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { apiFetch } from "../lib/apiFetch";
+import { UserSidebar } from "../components/Sidebar/UserSidebar";
 
 // Chưa hoàn thiện
 const validate = yup.object().shape({});
@@ -73,67 +74,7 @@ function ChangePassword() {
           <div className="row">
             <div className="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
               {/* Profile Sidebar */}
-              <div className="profile-sidebar">
-                <div className="widget-profile pro-widget-content">
-                  <div className="profile-info-widget">
-                    <a href="#" className="booking-doc-img">
-                      <img
-                        src="assets/img/patients/patient.jpg"
-                        alt="User Image"
-                      />
-                    </a>
-                    <div className="profile-det-info">
-                      <h3>Richard Wilson</h3>
-                      <div className="patient-details">
-                        <h5>
-                          <i className="fas fa-birthday-cake"></i> 24 Jul 1983,
-                          38 years
-                        </h5>
-                        <h5 className="mb-0">
-                          <i className="fas fa-map-marker-alt"></i> Newyork, USA
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="dashboard-widget">
-                  <nav className="dashboard-menu">
-                    <ul>
-                      <li>
-                        <a href="patient-dashboard.html">
-                          <i className="fas fa-columns"></i>
-                          <span>Dashboard</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="favourites.html">
-                          <i className="fas fa-bookmark"></i>
-                          <span>Favourites</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="/Chat">
-                          <i className="fas fa-comments"></i>
-                          <span>Message</span>
-                          <small className="unread-msg">23</small>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="/profileSettings">
-                          <i className="fas fa-user-cog"></i>
-                          <span>Profile Settings</span>
-                        </a>
-                      </li>
-                      <li className="active">
-                        <a href="/changePassword">
-                          <i className="fas fa-lock"></i>
-                          <span>Change Password</span>
-                        </a>
-                      </li>
-                    </ul>
-                  </nav>
-                </div>
-              </div>
+              <UserSidebar />
               {/* /Profile Sidebar */}
             </div>
 

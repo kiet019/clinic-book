@@ -6,7 +6,7 @@ export const useGetDoctorRating = ({ id }) => {
   const accessToken = getAccessToken();
 
   const query = useQuery({
-    queryKey: [accessToken, id],
+    queryKey: [accessToken, "rating", id],
     queryFn: async () => {
       const { data, status } = await apiFetch(`/doctors/${id}/ratings`, {
         method: "GET",
@@ -15,7 +15,7 @@ export const useGetDoctorRating = ({ id }) => {
       else return data;
     },
     enabled: !!id && !!accessToken,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
   });
 
   return query;

@@ -6,6 +6,7 @@ import { useGetDoctor } from "../hook/useGetDoctor";
 import { StarRating } from "../components/Rating/StartRating";
 import { apiFetch } from "../lib/apiFetch";
 import { useSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
 
 const getDateForTimeslot = (timeslot, weekDays) => {
   const [time, day] = timeslot.split("-");
@@ -25,6 +26,7 @@ const getDateForTimeslot = (timeslot, weekDays) => {
 
 function Booking() {
   const [searchParams] = useSearchParams(); // Lấy searchParams
+  const navigate = useNavigate();
   const maDoctor = searchParams.get("maDoctor");
 
   const { data } = useGetDoctorTimeslots({ id: maDoctor });
@@ -68,6 +70,11 @@ function Booking() {
       if (!status) {
         throw new Error(data);
       }
+      navigate(
+        `/bookingSuccess?tenDoctor=${doctor.doctorName}&time=${
+          selectedData.bookingDate
+        }-${selectedData.time.slice(0, 5)}`
+      );
       enqueueSnackbar("Tạo thành công", { variant: "success" });
     } catch (error) {
       console.log(error);
@@ -240,7 +247,7 @@ function Booking() {
                     handleBooking();
                   }}
                 >
-                  Tiến Hành Thanh Toán
+                  Đặt lịch
                 </a>
               </div>
               {/* /Submit Section */}

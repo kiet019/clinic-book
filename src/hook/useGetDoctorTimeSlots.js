@@ -6,7 +6,7 @@ export const useGetDoctorTimeslots = ({ id }) => {
   const accessToken = getAccessToken();
 
   const query = useQuery({
-    queryKey: [accessToken, "timeslots"],
+    queryKey: [accessToken, "timeslots", id],
     queryFn: async () => {
       const { data, status } = await apiFetch(`/doctors/timeslots/${id}`, {
         method: "GET",

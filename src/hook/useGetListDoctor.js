@@ -6,7 +6,7 @@ export const useGetListDoctor = () => {
   const accessToken = getAccessToken();
 
   const query = useQuery({
-    queryKey: [accessToken],
+    queryKey: [accessToken, "doctor"],
     queryFn: async () => {
       const { data, status } = await apiFetch("/doctors/getAlldoctor", {
         method: "GET",
