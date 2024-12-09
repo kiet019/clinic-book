@@ -18,7 +18,7 @@ function ProfileSettings() {
   const handleRegister = async (value) => {
     try {
       setIsLoading(true);
-      const res = await apiFetch("/doctors/updatedoctor", {
+      const res = await apiFetch("/user/update", {
         method: "PUT",
         body: JSON.stringify(value),
       });
