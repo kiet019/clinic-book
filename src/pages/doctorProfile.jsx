@@ -1,6 +1,53 @@
-import React from 'react';
+import React, { useState } from "react";
+import { useGetDoctor } from "../hook/useGetDoctor";
+import { useSearchParams } from "react-router-dom";
+import { StarRating } from "../components/Rating/StartRating";
+import * as yup from "yup";
+import { useFormik } from "formik";
+import { useSnackbar } from "notistack";
+import { apiFetch } from "../lib/apiFetch";
+import { useGetDoctorRating } from "../hook/useGetDoctorRating";
+import { DoctorRatingCard } from "../components/Rating/DoctorRatingCard";
 
 function DoctorProfile() {
+  const [searchParams] = useSearchParams(); // Lấy searchParams
+
+  const maDoctor = searchParams.get("maDoctor");
+  const { data } = useGetDoctor({ id: maDoctor });
+  const { data: doctorRating, refetch } = useGetDoctorRating({ id: maDoctor });
+
+  const { enqueueSnackbar } = useSnackbar();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleRating = async (value) => {
+    try {
+      setIsLoading(true);
+      const res = await apiFetch("/user/rating", {
+        method: "POST",
+        body: JSON.stringify({ ...value, doctorId: maDoctor }),
+      });
+      const { data, status } = res;
+      if (!status) {
+        throw new Error(data);
+      }
+      enqueueSnackbar("Đánh giá thành công", { variant: "success" });
+      refetch();
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar(error.message, { variant: "error" });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const { values, handleChange, handleSubmit, setFieldValue } = useFormik({
+    initialValues: {
+      rating: 0,
+      comment: "",
+    },
+    onSubmit: handleRating,
+  });
+
   return (
     <div>
       {/* Breadcrumb */}
@@ -10,8 +57,12 @@ function DoctorProfile() {
             <div className="col-md-12 col-12">
               <nav aria-label="breadcrumb" className="page-breadcrumb">
                 <ol className="breadcrumb">
-                  <li className="breadcrumb-item"><a href="/Home">Trang Chủ</a></li>
-                  <li className="breadcrumb-item active" aria-current="page">Hồ Sơ Bác Sĩ</li>
+                  <li className="breadcrumb-item">
+                    <a href="/Home">Trang Chủ</a>
+                  </li>
+                  <li className="breadcrumb-item active" aria-current="page">
+                    Hồ Sơ Bác Sĩ
+                  </li>
                 </ol>
               </nav>
               <h2 className="breadcrumb-title">Hồ Sơ Bác Sĩ</h2>
@@ -30,81 +81,134 @@ function DoctorProfile() {
               <div className="doctor-widget">
                 <div className="doc-info-left">
                   <div className="doctor-img">
-                    <img src="assets/img/doctors/doctor-thumb-02.jpg" className="img-fluid" alt="Hình Ảnh Người Dùng" />
+                    <img
+                      src="assets/img/doctors/doctor-thumb-02.jpg"
+                      className="img-fluid"
+                      alt="Hình Ảnh Người Dùng"
+                    />
                   </div>
                   <div className="doc-info-cont">
-                    <h4 className="doc-name">Dr. Darren Elder</h4>
-                    <p className="doc-speciality">BDS, MDS - Phẫu Thuật Miệng và Hàm Mặt</p>
+                    <h4 className="doc-name">{data?.doctorName}</h4>
+                    <p className="doc-speciality">{data?.bio}</p>
                     <p className="doc-department">
-                      <img src="assets/img/specialities/specialities-05.png" className="img-fluid" alt="Chuyên Khoa" />
-                      Nha Sĩ
+                      <img
+                        src="assets/img/specialities/specialities-05.png"
+                        className="img-fluid"
+                        alt="Chuyên Khoa"
+                      />
+                      {data?.department}
                     </p>
-                    <div className="rating">
-                      <i className="fas fa-star filled"></i>
-                      <i className="fas fa-star filled"></i>
-                      <i className="fas fa-star filled"></i>
-                      <i className="fas fa-star filled"></i>
-                      <i className="fas fa-star"></i>
-                      <span className="d-inline-block average-rating">(35)</span>
-                    </div>
+                    <StarRating rating={data?.rating} />
                     <div className="clinic-details">
                       <p className="doc-location">
-                        <i className="fas fa-map-marker-alt"></i> Newyork, Hoa Kỳ - <a href="javascript:void(0);">Lấy Đường Đi</a>
+                        <i className="fas fa-map-marker-alt"></i>{" "}
+                        {data?.address}, {data?.city}, {data?.state}
+                        <a href="javascript:void(0);">Lấy Đường Đi</a>
                       </p>
                       <ul className="clinic-gallery">
                         <li>
-                          <a href="assets/img/features/feature-01.jpg" data-fancybox="gallery">
-                            <img src="assets/img/features/feature-01.jpg" alt="Tính Năng" />
+                          <a
+                            href="assets/img/features/feature-01.jpg"
+                            data-fancybox="gallery"
+                          >
+                            <img
+                              src="assets/img/features/feature-01.jpg"
+                              alt="Tính Năng"
+                            />
                           </a>
                         </li>
                         <li>
-                          <a href="assets/img/features/feature-02.jpg" data-fancybox="gallery">
-                            <img src="assets/img/features/feature-02.jpg" alt="Hình Ảnh Tính Năng" />
+                          <a
+                            href="assets/img/features/feature-02.jpg"
+                            data-fancybox="gallery"
+                          >
+                            <img
+                              src="assets/img/features/feature-02.jpg"
+                              alt="Hình Ảnh Tính Năng"
+                            />
                           </a>
                         </li>
                         <li>
-                          <a href="assets/img/features/feature-03.jpg" data-fancybox="gallery">
-                            <img src="assets/img/features/feature-03.jpg" alt="Tính Năng" />
+                          <a
+                            href="assets/img/features/feature-03.jpg"
+                            data-fancybox="gallery"
+                          >
+                            <img
+                              src="assets/img/features/feature-03.jpg"
+                              alt="Tính Năng"
+                            />
                           </a>
                         </li>
                         <li>
-                          <a href="assets/img/features/feature-04.jpg" data-fancybox="gallery">
-                            <img src="assets/img/features/feature-04.jpg" alt="Tính Năng" />
+                          <a
+                            href="assets/img/features/feature-04.jpg"
+                            data-fancybox="gallery"
+                          >
+                            <img
+                              src="assets/img/features/feature-04.jpg"
+                              alt="Tính Năng"
+                            />
                           </a>
                         </li>
                       </ul>
                     </div>
                     <div className="clinic-services">
-                      <span>Trám Răng</span>
-                      <span> Tẩy Trắng Răng</span>
+                      <span>{data?.speciality}</span>
                     </div>
                   </div>
                 </div>
                 <div className="doc-info-right">
                   <div className="clini-infos">
                     <ul>
-                      <li><i className="far fa-thumbs-up"></i> 99%</li>
-                      <li><i className="far fa-comment"></i> 35 Phản Hồi</li>
-                      <li><i className="fas fa-map-marker-alt"></i> Newyork, Hoa Kỳ</li>
-                      <li><i className="far fa-money-bill-alt"></i> $100 mỗi giờ</li>
+                      <li>
+                        <i className="far fa-thumbs-up"></i> 99%
+                      </li>
+                      <li>
+                        <i className="far fa-comment"></i> {data?.email}
+                      </li>
+                      <li>
+                        <i className="fas fa-map-marker-alt"></i>
+                        {data?.phoneNumber}
+                      </li>
+                      <li>
+                        <i className="far fa-money-bill-alt"></i>{data?.speciality}
+                      </li>
                     </ul>
                   </div>
                   <div className="doctor-action">
-                    <a href="javascript:void(0)" className="btn btn-white fav-btn">
+                    <a
+                      href="javascript:void(0)"
+                      className="btn btn-white fav-btn"
+                    >
                       <i className="far fa-bookmark"></i>
                     </a>
                     <a href="/Chat" className="btn btn-white msg-btn">
                       <i className="far fa-comment-alt"></i>
                     </a>
-                    <a href="javascript:void(0)" className="btn btn-white call-btn" data-toggle="modal" data-target="#voice_call">
+                    <a
+                      href="javascript:void(0)"
+                      className="btn btn-white call-btn"
+                      data-toggle="modal"
+                      data-target="#voice_call"
+                    >
                       <i className="fas fa-phone"></i>
                     </a>
-                    <a href="javascript:void(0)" className="btn btn-white call-btn" data-toggle="modal" data-target="#video_call">
+                    <a
+                      href="javascript:void(0)"
+                      className="btn btn-white call-btn"
+                      data-toggle="modal"
+                      data-target="#video_call"
+                    >
                       <i className="fas fa-video"></i>
                     </a>
                   </div>
                   <div className="clinic-booking">
-                    <a className="apt-btn" href="/Booking">Đặt Lịch Hẹn</a>
+                    <a
+                      className="apt-btn"
+                      href={"/Booking" + "?maDoctor=" + maDoctor}
+                    >
+                      Đặt Lịch Hẹn
+                    </a>
                   </div>
                 </div>
               </div>
@@ -119,13 +223,22 @@ function DoctorProfile() {
               <nav className="user-tabs mb-4">
                 <ul className="nav nav-tabs nav-tabs-bottom nav-justified">
                   <li className="nav-item">
-                    <a className="nav-link active" href="#doc_overview" data-toggle="tab">Tổng Quan</a>
+                    <a
+                      className="nav-link active"
+                      href="#doc_overview"
+                      data-toggle="tab"
+                    >
+                      Tổng Quan
+                    </a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="#doc_Reviews" data-toggle="tab">Đánh Giá</a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="#doc_business_hours" data-toggle="tab">Giờ Làm Việc</a>
+                    <a
+                      className="nav-link"
+                      href="#doc_Reviews"
+                      data-toggle="tab"
+                    >
+                      Đánh Giá
+                    </a>
                   </li>
                 </ul>
               </nav>
@@ -134,13 +247,17 @@ function DoctorProfile() {
               {/* Nội Dung Tab */}
               <div className="tab-content pt-0">
                 {/* Nội Dung Tổng Quan */}
-                <div role="tabpanel" id="doc_overview" className="tab-pane fade show active">
+                <div
+                  role="tabpanel"
+                  id="doc_overview"
+                  className="tab-pane fade show active"
+                >
                   <div className="row">
                     <div className="col-md-12 col-lg-9">
                       {/* Chi Tiết Về Bác Sĩ */}
                       <div className="widget about-widget">
                         <h4 className="widget-title">Về Tôi</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        <p>{data?.bio}</p>
                       </div>
                       {/* /Chi Tiết Về Bác Sĩ */}
                     </div>
@@ -149,7 +266,11 @@ function DoctorProfile() {
                 {/* /Nội Dung Tổng Quan */}
 
                 {/* Nội Dung Địa Điểm */}
-                <div role="tabpanel" id="doc_locations" className="tab-pane fade">
+                <div
+                  role="tabpanel"
+                  id="doc_locations"
+                  className="tab-pane fade"
+                >
                   <div className="row">
                     <div className="col-md-12">
                       {/* Danh Sách Địa Điểm */}
@@ -179,9 +300,7 @@ function DoctorProfile() {
                           </div>
                           {/* /Giờ Làm Việc */}
                           <div className="col-md-2">
-                            <div className="consult-price">
-                              $350
-                            </div>
+                            <div className="consult-price">$350</div>
                           </div>
                         </div>
                       </div>
@@ -197,84 +316,44 @@ function DoctorProfile() {
                   {/* Viết Đánh Giá */}
                   <div className="review-box">
                     <h4 className="widget-title">Đánh Giá</h4>
-                    <form>
+                    {doctorRating &&
+                      doctorRating.map((data, index) => (
+                        <DoctorRatingCard
+                          doctorRating={data}
+                          key={index}
+                          id={index + 1}
+                        />
+                      ))}
+
+                    <form onSubmit={handleSubmit}>
                       <div className="form-group">
-                        <textarea className="form-control" placeholder="Viết Đánh Giá"></textarea>
-                      </div>
-                      <div className="terms-accept">
-                        <div className="custom-checkbox">
-                          <input type="checkbox" id="terms_accept" />
-                          <label htmlFor="terms_accept">Tôi đã đọc và chấp nhận <a href="#">Điều Khoản &amp; Điều Kiện</a></label>
-                        </div>
+                        <StarRating
+                          onRatingChange={(e) => {
+                            setFieldValue("rating", e);
+                          }}
+                        />
+                        <textarea
+                          className="form-control"
+                          placeholder="Viết Đánh Giá"
+                          name="comment"
+                          value={values.comment}
+                          onChange={handleChange}
+                        />
                       </div>
                       <div className="submit-section">
-                        <button type="submit" className="btn btn-primary submit-btn">Thêm Đánh Giá</button>
+                        <button
+                          type="submit"
+                          disabled={isLoading}
+                          className="btn btn-primary submit-btn"
+                        >
+                          Thêm Đánh Giá
+                        </button>
                       </div>
                     </form>
                   </div>
                   {/* /Viết Đánh Giá */}
                 </div>
                 {/* /Nội Dung Đánh Giá */}
-
-                {/* Nội Dung Giờ Làm Việc */}
-                <div role="tabpanel" id="doc_business_hours" className="tab-pane fade">
-                  <div className="row">
-                    <div className="col-md-6 offset-md-3">
-                      {/* Widget Giờ Làm Việc */}
-                      <div className="widget business-widget">
-                        <div className="widget-content">
-                          <div className="listing-hours">
-                            <div className="listing-day current">
-                              <div className="day">Hôm Nay <span>5 Nov 2019</span></div>
-                              <div className="time-items">
-                                <span className="open-status"><span className="badge bg-success-light">Mở Cửa</span></span>
-                                <span className="time">07:00 AM - 09:00 PM</span>
-                              </div>
-                            </div>
-                            <div className="listing-day">
-                              <div className="day">Thứ Hai</div>
-                              <div className="time-items">
-                                <span className="time">07:00 AM - 09:00 PM</span>
-                              </div>
-                            </div>
-                            <div className="listing-day">
-                              <div className="day">Thứ Ba</div>
-                              <div className="time-items">
-                                <span className="time">07:00 AM - 09:00 PM</span>
-                              </div>
-                            </div>
-                            <div className="listing-day">
-                              <div className="day">Thứ Tư</div>
-                              <div className="time-items">
-                                <span className="time">07:00 AM - 09:00 PM</span>
-                              </div>
-                            </div>
-                            <div className="listing-day">
-                              <div className="day">Thứ Năm</div>
-                              <div className="time-items">
-                                <span className="time">07:00 AM - 09:00 PM</span>
-                              </div>
-                            </div>
-                            <div className="listing-day">
-                              <div className="day">Thứ Sáu</div>
-                              <div className="time-items">
-                                <span className="time">07:00 AM - 09:00 PM</span>
-                              </div>
-                            </div>
-                            <div className="listing-day closed">
-                              <div className="day">Chủ Nhật</div>
-                              <div className="time-items">
-                                <span className="time"><span className="badge bg-danger-light">Đóng Cửa</span></span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      {/* /Widget Giờ Làm Việc */}
-                    </div>
-                  </div>
-                </div>
-                {/* /Nội Dung Giờ Làm Việc */}
               </div>
             </div>
           </div>
@@ -293,12 +372,21 @@ function DoctorProfile() {
                 <div className="call-wrapper">
                   <div className="call-inner">
                     <div className="call-user">
-                      <img alt="Hình Ảnh Người Dùng" src="assets/img/doctors/doctor-thumb-02.jpg" className="call-avatar" />
+                      <img
+                        alt="Hình Ảnh Người Dùng"
+                        src="assets/img/doctors/doctor-thumb-02.jpg"
+                        className="call-avatar"
+                      />
                       <h4>Dr. Darren Elder</h4>
                       <span>Đang Kết Nối...</span>
                     </div>
                     <div className="call-items">
-                      <a href="javascript:void(0);" className="btn call-item call-end" data-dismiss="modal" aria-label="Close">
+                      <a
+                        href="javascript:void(0);"
+                        className="btn call-item call-end"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                      >
                         <i className="material-icons">call_end</i>
                       </a>
                       <a href="/voiceCall" className="btn call-item call-start">
@@ -325,15 +413,27 @@ function DoctorProfile() {
                 <div className="call-wrapper">
                   <div className="call-inner">
                     <div className="call-user">
-                      <img className="call-avatar" src="assets/img/doctors/doctor-thumb-02.jpg" alt="Hình Ảnh Người Dùng" />
+                      <img
+                        className="call-avatar"
+                        src="assets/img/doctors/doctor-thumb-02.jpg"
+                        alt="Hình Ảnh Người Dùng"
+                      />
                       <h4>Dr. Darren Elder</h4>
                       <span>Đang Gọi ...</span>
                     </div>
                     <div className="call-items">
-                      <a href="javascript:void(0);" className="btn call-item call-end" data-dismiss="modal" aria-label="Close">
+                      <a
+                        href="javascript:void(0);"
+                        className="btn call-item call-end"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                      >
                         <i className="material-icons">call_end</i>
                       </a>
-                      <a href="video-call.html" className="btn call-item call-start">
+                      <a
+                        href="video-call.html"
+                        className="btn call-item call-start"
+                      >
                         <i className="material-icons">videocam</i>
                       </a>
                     </div>

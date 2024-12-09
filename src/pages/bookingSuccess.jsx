@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 function BookingSuccess() {
+  const [searchParams] = useSearchParams(); // Lấy searchParams
+  const tenDoctor = searchParams.get("tenDoctor");
+  const [year, month, day, time] = searchParams.get("time").split('-')
+
   return (
     <div>
       {/* Breadcrumb */}
@@ -10,8 +15,12 @@ function BookingSuccess() {
             <div className="col-md-12 col-12">
               <nav aria-label="breadcrumb" className="page-breadcrumb">
                 <ol className="breadcrumb">
-                  <li className="breadcrumb-item"><a href="/Home">Trang Chủ</a></li>
-                  <li className="breadcrumb-item active" aria-current="page">Đặt Lịch Hẹn</li>
+                  <li className="breadcrumb-item">
+                    <a href="/Home">Trang Chủ</a>
+                  </li>
+                  <li className="breadcrumb-item active" aria-current="page">
+                    Đặt Lịch Hẹn
+                  </li>
                 </ol>
               </nav>
               <h2 className="breadcrumb-title">Đặt Lịch Hẹn</h2>
@@ -31,9 +40,18 @@ function BookingSuccess() {
                 <div className="card-body">
                   <div className="success-cont">
                     <i className="fas fa-check"></i>
-                    <h3>  </h3>
-                    <p>Đặt Lịch Hẹn Với <strong>Bác Sĩ Darren Elder</strong><br /> Vào <strong>12 Tháng 11 2019 5:00PM Đến 6:00PM</strong></p>
-                    <a href="/invoiceView" className="btn btn-primary view-inv-btn">Xem Hóa Đơn</a>
+                    <h3> </h3>
+                    <p>
+                      Đặt Lịch Hẹn Với <strong>{tenDoctor}</strong>
+                      <br /> Vào{" "}
+                      <strong>vào lúc {time}, Ngày {day} tháng {month} năm {year}</strong>
+                    </p>
+                    <a
+                      href="/invoiceView"
+                      className="btn btn-primary view-inv-btn"
+                    >
+                      Xem Hóa Đơn
+                    </a>
                   </div>
                 </div>
               </div>

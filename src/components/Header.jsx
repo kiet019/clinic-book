@@ -1,7 +1,18 @@
-import React from 'react';
+import React from "react";
+import { getAccessToken, getRole, setAccessToken, setRole } from "../lib/token";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
-  return <div>
+  const accessToken = getAccessToken();
+  const role = getRole();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    setAccessToken("");
+    setRole("");
+    navigate("/Login");
+  };
+  return (
+    <div>
       {/* Header */}
       <header className="header">
         <nav className="navbar navbar-expand-lg header-nav">
@@ -20,9 +31,17 @@ function Header() {
           <div className="main-menu-wrapper">
             <div className="menu-header">
               <a href="/Home" className="menu-logo">
-                <img src="assets/img/logo.png" className="img-fluid" alt="Logo" />
+                <img
+                  src="assets/img/logo.png"
+                  className="img-fluid"
+                  alt="Logo"
+                />
               </a>
-              <a id="menu_close" className="menu-close" href="javascript:void(0);">
+              <a
+                id="menu_close"
+                className="menu-close"
+                href="javascript:void(0);"
+              >
                 <i className="fas fa-times"></i>
               </a>
             </div>
@@ -30,36 +49,66 @@ function Header() {
               <li className="active">
                 <a href="/Home">Trang Chủ</a>
               </li>
-              <li className="has-submenu">
-                <a href="#">Bác Sĩ <i className="fas fa-chevron-down"></i></a>
-                <ul className="submenu">
-                  <li><a href="/doctorDashboard">Bác Sĩ Dashboard</a></li>
-                  <li><a href="/Appointments">Cuộc Hẹn</a></li>
-                  <li><a href="/scheduleTimings">Lịch</a></li>
-                  <li><a href="/patientProfile">Hồ Sơ Bệnh Nhân</a></li>
-                  <li><a href="/Chat">Trò Chuyện</a></li>
-                  <li><a href="/Invoice">Hóa Đơn</a></li>
-                  <li><a href="/doctorProfileSettings">Cài Đặt Hồ Sơ Bác Sĩ</a></li>
-                  <li><a href="/Reviews">Đánh Giá</a></li>
-                  <li><a href="/register">Đăng Ký Bác Sĩ</a></li>
-                </ul>
-              </li>
-              <li className="has-submenu">
-                <a href="#">Bệnh Nhân <i className="fas fa-chevron-down"></i></a>
-                <ul className="submenu">
-                  <li><a href="/Search">Tìm Kiếm Bác Sĩ</a></li>
-                  <li><a href="/doctorProfile">Hồ Sơ Bác Sĩ</a></li>
-                  <li><a href="/Booking">Đặt Lịch</a></li>
-                  <li><a href="/Checkout">Thanh Toán</a></li>
-                  <li><a href="/bookingSuccess">Đặt Lịch Thành Công</a></li>
-                  <li><a href="/Chat">Trò Chuyện</a></li>
-                  <li><a href="/profileSettings">Cài Đặt Hồ Sơ</a></li>
-                  <li><a href="/changePassword">Đổi Mật Khẩu</a></li>
-                </ul>
-              </li>
-              <li className="">
-                <a href="/admin">Admin</a>
-              </li>
+              {role && role === "doctor" && (
+                <li className="has-submenu">
+                  <a href="#">
+                    Bác Sĩ <i className="fas fa-chevron-down"></i>
+                  </a>
+                  <ul className="submenu">
+                    <li>
+                      <a href="/doctorDashboard">Bác Sĩ Dashboard</a>
+                    </li>
+                    {/* <li>
+                      <a href="/Appointments">Cuộc Hẹn</a>
+                    </li> */}
+                    <li>
+                      <a href="/scheduleTimings">Lịch</a>
+                    </li>
+                    {/* <li>
+                      <a href="/patientProfile">Hồ Sơ Bệnh Nhân</a>
+                    </li> */}
+                    {/* <li>
+                      <a href="/Chat">Trò Chuyện</a>
+                    </li> */}
+                    {/* <li>
+                      <a href="/Invoice">Hóa Đơn</a>
+                    </li> */}
+                    <li>
+                      <a href="/doctorProfileSettings">Cài Đặt Hồ Sơ Bác Sĩ</a>
+                    </li>
+                    {/* <li>
+                      <a href="/Reviews">Đánh Giá</a>
+                    </li>
+                    <li>
+                      <a href="/register">Đăng Ký Bác Sĩ</a>
+                    </li> */}
+                  </ul>
+                </li>
+              )}
+              {role && role === "user" && (
+                <li className="has-submenu">
+                  <a href="#">
+                    Bệnh Nhân <i className="fas fa-chevron-down"></i>
+                  </a>
+                  <ul className="submenu">
+                    <li>
+                      <a href="/Search">Tìm Kiếm Bác Sĩ</a>
+                    </li>
+                    <li>
+                      <a href="/userDashboard">Lịch Đã Đặt</a>
+                    </li>
+                    <li>
+                      <a href="/Chat">Trò Chuyện</a>
+                    </li>
+                    <li>
+                      <a href="/profileSettings">Cài Đặt Hồ Sơ</a>
+                    </li>
+                    <li>
+                      <a href="/changePassword">Đổi Mật Khẩu</a>
+                    </li>
+                  </ul>
+                </li>
+              )}
             </ul>
           </div>
           <ul className="nav header-navbar-rht">
@@ -73,14 +122,26 @@ function Header() {
               </div>
             </li>
             <li className="nav-item">
-              <a className="nav-link header-login" href="/login">Đăng Nhập / Đăng Ký </a>
+              {accessToken ? (
+                <a
+                  className="nav-link header-login"
+                  href="#"
+                  onClick={handleLogout}
+                >
+                  Đăng xuất
+                </a>
+              ) : (
+                <a className="nav-link header-login" href="/login">
+                  Đăng Nhập / Đăng Ký
+                </a>
+              )}
             </li>
           </ul>
         </nav>
       </header>
       {/* /Header */}
-
-  </div>;
+    </div>
+  );
 }
 
 export default Header;
