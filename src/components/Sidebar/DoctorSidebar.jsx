@@ -33,12 +33,12 @@ export const DoctorSidebar = () => {
                 <span>Lịch Hẹn</span>
               </a>
             </li> */}
-            {/* <li>
+            <li>
               <a href="/patientProfile">
                 <i className="fas fa-user-injured"></i>
                 <span>Bệnh Nhân Của Tôi</span>
               </a>
-            </li> */}
+            </li>
             <li className="active">
               <a href="/scheduleTimings">
                 <i className="fas fa-hourglass-start"></i>

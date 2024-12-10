@@ -219,6 +219,8 @@ function DoctorProfileSettings() {
                           <textarea
                             type="text"
                             value={values.bio}
+                            onChange={handleChange}
+                            name="bio"
                             className="form-control"
                           />
                         </div>
@@ -240,7 +242,7 @@ function DoctorProfileSettings() {
                       </div>
                       <div className="col-md-6">
                         <div className="form-group">
-                          <label>Số Điện Thoại</label>
+                          <label>Speciality</label>
                           <input
                             type="text"
                             value={values.speciality}
