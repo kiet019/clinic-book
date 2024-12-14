@@ -120,7 +120,6 @@ export const transformTimeSchedule = (inputData) => {
       slot.timeStart.slice(0, 5),
       slot.timeEnd.slice(0, 5),
     ]);
-
     return acc;
   }, {});
 };

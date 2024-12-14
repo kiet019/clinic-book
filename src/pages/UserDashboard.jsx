@@ -2,9 +2,11 @@ import React from "react";
 import { useGetDoctorAppointment } from "../hook/useGetDoctorAppointment";
 import { UserSidebar } from "../components/Sidebar/UserSidebar";
 import { useGetUserAppointment } from "../hook/useGetUserAppointment";
+import { useNavigate } from "react-router-dom";
 
 function UserDashboard() {
   const { data } = useGetUserAppointment();
+  const navigate = useNavigate()
   return (
     <div>
       {/* Breadcrumb */}
@@ -59,7 +61,15 @@ function UserDashboard() {
                         <tbody>
                           {data &&
                             data.map((e, index) => (
-                              <tr key={index}>
+                              <tr
+                                key={index}
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  navigate(
+                                    `/viewPrescription?appointmentId=${e.appointmentId}`
+                                  );
+                                }}
+                              >
                                 <td>
                                   <h2 className="table-avatar">
                                     {e.doctorName}

@@ -1,9 +1,11 @@
 import React from "react";
 import { DoctorSidebar } from "../components/Sidebar/DoctorSidebar";
 import { useGetDoctorAppointment } from "../hook/useGetDoctorAppointment";
+import { useNavigate } from "react-router-dom";
 
 function DoctorDashboard() {
   const { data } = useGetDoctorAppointment();
+  const navigate = useNavigate();
   return (
     <div>
       {/* Breadcrumb */}
@@ -47,7 +49,7 @@ function DoctorDashboard() {
                       <table className="table table-hover table-center mb-0">
                         <thead>
                           <tr>
-                            <th>Tên Bác Sĩ</th>
+                            <th>Tên Bệnh Nhân</th>
                             <th>Ngày Hẹn</th>
                             <th>Bắt Đầu</th>
                             <th>Kết Thúc</th>
@@ -58,7 +60,15 @@ function DoctorDashboard() {
                         <tbody>
                           {data &&
                             data.map((e, index) => (
-                              <tr key={index}>
+                              <tr
+                                key={index}
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  navigate(
+                                    `/addPrescription?appointmentId=${e.appointmentId}`
+                                  );
+                                }}
+                              >
                                 <td>
                                   <h2 className="table-avatar">
                                     {e.doctorName}

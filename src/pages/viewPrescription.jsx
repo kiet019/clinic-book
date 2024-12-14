@@ -6,7 +6,7 @@ import { useGetListMedichine } from "../hook/useGetListMedicine";
 import { useSnackbar } from "notistack";
 import { apiFetch } from "../lib/apiFetch";
 
-function AddPrescription() {
+function ViewPrescription() {
   const [searchParams] = useSearchParams();
   const appointmentId = searchParams.get("appointmentId");
   const ref = useRef({ current: false });
@@ -147,7 +147,7 @@ function AddPrescription() {
             <div className="col-md-7 col-lg-8 col-xl-9">
               <div className="card">
                 <div className="card-header">
-                  <h4 className="card-title mb-0">Thêm Đơn Thuốc</h4>
+                  <h4 className="card-title mb-0">Xem Đơn Thuốc</h4>
                 </div>
                 <div className="card-body">
                   <div className="row">
@@ -161,120 +161,43 @@ function AddPrescription() {
                     </div>
                   </div>
 
-                  {/* Add Item */}
-                  <div className="add-more-item text-right">
-                    <a
-                      href="javascript:void(0);"
-                      onClick={handleAddPrescription}
-                    >
-                      <i className="fas fa-plus-circle"></i> Thêm Mục
-                    </a>
-                  </div>
-                  {/* /Add Item */}
-
                   {/* Prescription Item */}
                   <div className="card card-table">
                     <div className="card-body">
                       <div className="table-responsive">
-                        {/* <table className="table table-hover table-center">
-                          <thead>
-                            <tr>
-                              <th style={{ minWidth: "200px" }}>Tên</th>
-                              <th style={{ minWidth: "100px" }}>Mô tả</th>
-                              <th style={{ minWidth: "80px" }}></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td>
-                                <select className="form-control select">
-                                  {listMedicines &&
-                                    listMedicines.map((e) => (
-                                      <option key={e.name} value={e.name}>
-                                        {e.name}
-                                      </option>
-                                    ))}
-                                </select>
-                              </td>
-                              <td>
-                                <input className="form-control" type="text" />
-                              </td>
-
-                              <td>
-                                <a
-                                  href="#"
-                                  className="btn bg-danger-light trash"
-                                >
-                                  <i className="far fa-trash-alt"></i>
-                                </a>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table> */}
                         <table className="table table-hover table-center">
                           <thead>
                             <tr>
                               <th style={{ minWidth: "200px" }}>Tên</th>
-                              <th style={{ minWidth: "100px" }}>Mô tả</th>
                               <th style={{ minWidth: "100px" }}>Liều dùng</th>
-                              <th style={{ minWidth: "80px" }}></th>
+                              <th style={{ minWidth: "100px" }}>Mô tả</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {prescriptionList.map((prescription, index) => (
+                            {data?.prescriptionDTO.map((prescription, index) => (
                               <tr key={index}>
                                 <td>
-                                  <select
-                                    className="form-control select"
-                                    value={prescription.medicineId}
-                                    onChange={(e) =>
-                                      handleUpdatePrescription(
-                                        index,
-                                        "medicineId",
-                                        e.target.value
-                                      )
-                                    }
-                                  >
-                                    <option value="">Chọn thuốc</option>
-                                    {listMedicines &&
-                                      listMedicines.map((medicine) => (
-                                        <option
-                                          key={medicine.medicineId}
-                                          value={medicine.medicineId}
-                                        >
-                                          {medicine.name}
-                                        </option>
-                                      ))}
-                                  </select>
-                                </td>
-                                <td>
-                                  <textarea readOnly value={prescription.description} style={{width: "100%"}}/>
+                                  <input
+                                    className="form-control"
+                                    type="text"
+                                    value={prescription.name}
+                                    readOnly
+                                  />
                                 </td>
                                 <td>
                                   <input
                                     className="form-control"
                                     type="text"
                                     value={prescription.dosage}
-                                    onChange={(e) =>
-                                      handleUpdatePrescription(
-                                        index,
-                                        "dosage",
-                                        e.target.value
-                                      )
-                                    }
+                                    readOnly
                                   />
                                 </td>
                                 <td>
-                                  <a
-                                    href="#"
-                                    className="btn bg-danger-light trash"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      handleRemovePrescription(index);
-                                    }}
-                                  >
-                                    <i className="far fa-trash-alt"></i>
-                                  </a>
+                                  <textarea
+                                    readOnly
+                                    value={prescription.description}
+                                    style={{ width: "100%" }}
+                                  />
                                 </td>
                               </tr>
                             ))}
@@ -285,30 +208,6 @@ function AddPrescription() {
                   </div>
                   {/* /Prescription Item */}
 
-                  {/* Submit Section */}
-                  <div className="row">
-                    <div className="col-md-12">
-                      <div className="submit-section">
-                        <button
-                          type="submit"
-                          className="btn btn-primary submit-btn"
-                          onClick={handleSavePrescription}
-                        >
-                          Lưu
-                        </button>
-                        <button
-                          type="reset"
-                          className="btn btn-secondary submit-btn"
-                          onClick={() => {
-                            navigate("/doctorDashboard");
-                          }}
-                        >
-                          Xóa
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  {/* /Submit Section */}
                 </div>
               </div>
             </div>
@@ -320,4 +219,4 @@ function AddPrescription() {
   );
 }
 
-export default AddPrescription;
+export default ViewPrescription;

@@ -46,6 +46,7 @@ import DoctorList from './pages/admin/DoctorList';
 import PatientList from './pages/admin/PatientList';
 import TransactionsList from './pages/admin/TransactionsList';
 import Appointment from './pages/admin/Appointment';
+import ViewPrescription from "./pages/viewPrescription";
 
 // Hook để kiểm tra route hiện tại
 function Layout() {
@@ -83,6 +84,7 @@ function Layout() {
         <Route path="/patientProfile" element={<PatientProfile />} />
         <Route path="/Checkout" element={<Checkout />} />
         <Route path="/addPrescription" element={<AddPrescription />} />
+        <Route path="/viewPrescription" element={<ViewPrescription />} />
         <Route path="/addBilling" element={<AddBilling />} />
         <Route path="/doctorProfileSettings" element={<DoctorProfileSettings />} />
         <Route path="/doctorDashboard" element={<DoctorDashboard />} />

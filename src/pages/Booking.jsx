@@ -2,11 +2,21 @@ import React, { useEffect, useMemo, useState } from "react";
 import { getWeekDays, groupAndSortTimeSlots } from "../lib/date";
 import { useGetDoctorTimeslots } from "../hook/useGetDoctorTimeSlots";
 import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useGetDoctor } from "../hook/useGetDoctor";
 import { StarRating } from "../components/Rating/StartRating";
 import { apiFetch } from "../lib/apiFetch";
 import { useSnackbar } from "notistack";
-import { useNavigate } from "react-router-dom";
+
+const weekDaysOrder = [
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
+  "SUNDAY",
+];
 
 const getDateForTimeslot = (timeslot, weekDays) => {
   const [time, day] = timeslot.split("-");
@@ -48,8 +58,17 @@ function Booking() {
 
   const formatTimeslots = useMemo(() => {
     if (data) {
-      return groupAndSortTimeSlots(data);
+      const groupedSlots = groupAndSortTimeSlots(data);
+
+      // Bảo đảm các ngày trong tuần luôn tồn tại, ngay cả khi không có slot
+      const allDays = weekDaysOrder.reduce((acc, day) => {
+        acc[day] = groupedSlots[day] || []; // Nếu không có slot, gán mảng rỗng
+        return acc;
+      }, {});
+
+      return allDays;
     }
+    return {};
   }, [data]);
 
   const handleBooking = async () => {
@@ -86,9 +105,10 @@ function Booking() {
 
   useEffect(() => {
     if (formatTimeslots) {
-      console.log(Object.keys(formatTimeslots));
+      console.log(formatWeek);
+      console.log(formatTimeslots);
     }
-    console.log(formatWeek);
+    // console.log(formatWeek);
   }, [formatTimeslots, formatWeek]);
 
   return (
@@ -204,26 +224,31 @@ function Booking() {
                             Object.entries(formatTimeslots).map(
                               ([key, value]) => (
                                 <li key={key}>
-                                  {value.map((e) => {
-                                    const slotId = `${e.timeStart}-${key}`; // ID duy nhất
-                                    const isSelected = selectedSlot === slotId; // Kiểm tra xem slot có được chọn hay không
-                                    return (
-                                      <a
-                                        className={`timing ${
-                                          isSelected ? "selected" : ""
-                                        }`}
-                                        href="#"
-                                        id={e + key}
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          handleClick(slotId);
-                                        }}
-                                      >
-                                        <span>{e.timeStart.slice(0, 5)}</span> -{" "}
-                                        <span>{e.timeEnd.slice(0, 5)}</span>
-                                      </a>
-                                    );
-                                  })}
+                                  {value.length > 0 ? (
+                                    value.map((e) => {
+                                      const slotId = `${e.timeStart}-${key}`; // ID duy nhất
+                                      const isSelected =
+                                        selectedSlot === slotId; // Kiểm tra xem slot có được chọn hay không
+                                      return (
+                                        <a
+                                          key={slotId}
+                                          className={`timing ${
+                                            isSelected ? "selected" : ""
+                                          }`}
+                                          href="#"
+                                          onClick={(event) => {
+                                            event.preventDefault();
+                                            handleClick(slotId);
+                                          }}
+                                        >
+                                          <span>{e.timeStart.slice(0, 5)}</span>{" "}
+                                          - <span>{e.timeEnd.slice(0, 5)}</span>
+                                        </a>
+                                      );
+                                    })
+                                  ) : (
+                                    <p className="no-slot">Không có lịch hẹn</p> // Placeholder cho ngày trống
+                                  )}
                                 </li>
                               )
                             )}
