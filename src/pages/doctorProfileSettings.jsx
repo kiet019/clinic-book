@@ -17,7 +17,7 @@ function DoctorProfileSettings() {
   const handleRegister = async (value) => {
     try {
       setIsLoading(true);
-      const res = await apiFetch("/doctors/updatedoctor", {
+      const res = await apiFetch("/doctors/updateDoctor", {
         method: "PUT",
         body: JSON.stringify(value),
       });
@@ -178,7 +178,12 @@ function DoctorProfileSettings() {
                           <label>
                             Tên <span className="text-danger">*</span>
                           </label>
-                          <input type="text" className="form-control" />
+                          <input type="text" 
+                            className="form-control"
+                            value={values.lastName}
+                            name="lastName"
+                            onChange={handleChange}
+                          />
                         </div>
                       </div>
                       <div className="col-md-6">

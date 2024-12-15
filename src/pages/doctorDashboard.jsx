@@ -71,7 +71,7 @@ function DoctorDashboard() {
                               >
                                 <td>
                                   <h2 className="table-avatar">
-                                    {e.doctorName}
+                                    {e.name}
                                   </h2>
                                 </td>
                                 <td>{e.date}</td>
@@ -86,23 +86,9 @@ function DoctorDashboard() {
                                   </span>
                                 </td>
                                 <td>
-                                  <div className="table-action">
-                                    {/* <a
-                                      href="javascript:void(0);"
-                                      className="btn btn-sm bg-info-light"
-                                    >
-                                      <i className="far fa-eye"></i> Xem
-                                    </a> */}
-                                    <a className="btn btn-sm bg-success-light">
-                                      {e.status}
-                                    </a>
-                                    {/* <a
-                                      href="javascript:void(0);"
-                                      className="btn btn-sm bg-danger-light"
-                                    >
-                                      <i className="fas fa-times"></i> Hủy
-                                    </a> */}
-                                  </div>
+                                <span className="d-block text-info">
+                                    {e.status}
+                                  </span>
                                 </td>
                               </tr>
                             ))}
