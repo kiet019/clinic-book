@@ -67,9 +67,9 @@ function Header() {
                     {/* <li>
                       <a href="/patientProfile">Hồ Sơ Bệnh Nhân</a>
                     </li> */}
-                    {/* <li>
-                      <a href="/Chat">Trò Chuyện</a>
-                    </li> */}
+                    <li>
+                      <a href="/chatDoctor">Trò Chuyện</a>
+                    </li>
                     {/* <li>
                       <a href="/Invoice">Hóa Đơn</a>
                     </li> */}

@@ -57,13 +57,13 @@ export const DoctorSidebar = () => {
                 <span>Đánh Giá</span>
               </a>
             </li> */}
-            {/* <li>
-              <a href="/Chat">
+            <li>
+              <a href="/chatDoctor">
                 <i className="fas fa-comments"></i>
                 <span>Tin Nhắn</span>
                 <small className="unread-msg">23</small>
               </a>
-            </li> */}
+            </li>
             <li>
               <a href="/doctorProfileSettings">
                 <i className="fas fa-user-cog"></i>

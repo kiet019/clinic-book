@@ -30,7 +30,7 @@ export const DoctorVerticalCard = ({ doctor, handleChangeRating }) => {
                   className="img-fluid"
                   alt="Chuyên Khoa"
                 />
-                Nha Sĩ
+                {doctor.department}
               </h5>
               <StarRating
                 rating={doctor?.rating}
@@ -38,7 +38,7 @@ export const DoctorVerticalCard = ({ doctor, handleChangeRating }) => {
               />
               <div className="clinic-details">
                 <p className="doc-location">
-                  <i className="fas fa-map-marker-alt"></i> Florida, Hoa Kỳ
+                  <i className="fas fa-map-marker-alt"></i> {doctor.address}
                 </p>
                 <ul className="clinic-gallery">
                   <li>
@@ -97,21 +97,16 @@ export const DoctorVerticalCard = ({ doctor, handleChangeRating }) => {
             <div className="clini-infos">
               <ul>
                 <li>
-                  <i className="far fa-thumbs-up"></i> 98%
+                  <i className="far fa-thumbs-up"></i> {doctor.phoneNumber}
                 </li>
                 <li>
                   <i className="far fa-comment"></i> 17 Feedback
                 </li>
                 <li>
-                  <i className="fas fa-map-marker-alt"></i> Florida, Hoa Kỳ
+                  <i className="fas fa-map-marker-alt"></i> {doctor.address}
                 </li>
                 <li>
                   <i className="far fa-money-bill-alt"></i> $300 - $1000
-                  <i
-                    className="fas fa-info-circle"
-                    data-toggle="tooltip"
-                    title="Lorem Ipsum"
-                  ></i>
                 </li>
               </ul>
             </div>

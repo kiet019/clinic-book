@@ -48,6 +48,7 @@ import TransactionsList from './pages/admin/TransactionsList';
 import Appointment from './pages/admin/Appointment';
 import ViewPrescription from "./pages/viewPrescription";
 import Medicines from "./pages/admin/Medicines";
+import ChatDoctor from "./pages/chatDoctor";
 
 // Hook để kiểm tra route hiện tại
 function Layout() {
@@ -80,6 +81,7 @@ function Layout() {
         <Route path="/favourites" element={<Favourites />} />
         <Route path="/booking" element={<Booking />} />
         <Route path="/chat" element={<Chat />} />
+        <Route path="/chatDoctor" element={<ChatDoctor />} />
         <Route path="/doctorRegister" element={<DoctorRegister />} />
         <Route path="/Invoice" element={<Invoice />} />
         <Route path="/patientProfile" element={<PatientProfile />} />

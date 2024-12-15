@@ -86,13 +86,7 @@ function Search() {
                   <h4 className="card-title mb-0">Bộ Lọc Tìm Kiếm</h4>
                 </div>
                 <div className="card-body">
-                  <div className="filter-widget">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Tên bác sĩ"
-                    />
-                  </div>
+                  
                   <div className="filter-widget">
                     <h4>Chọn Chuyên Khoa</h4>
                     {listDepartment &&
