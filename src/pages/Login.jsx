@@ -25,10 +25,22 @@ function Login() {
         throw new Error(message);
       }
       setAccessToken(data.token);
-      console.log(data)
-      setRole(data.role[0].toLowerCase())
-      navigate("/Home");
       enqueueSnackbar("Đăng nhập thành công", { variant: "success" });
+      if (data.role.includes("ADMIN")) {
+        setRole("admin");
+        navigate("/admin/AdminDashboard");
+        return;
+      }
+      if (data.role.includes("DOCTOR")) {
+        setRole("doctor");
+        navigate("/Home");
+        return;
+      }
+      if (data.role.includes("USER")) {
+        setRole("user");
+        navigate("/Home");
+        return;
+      }
     } catch (error) {
       console.log(error);
       enqueueSnackbar(error.message, { variant: "error" });

@@ -11,6 +11,8 @@ export const useGetListDoctor = () => {
       const { data, status } = await apiFetch("/doctors/getAlldoctor", {
         method: "GET",
       });
+      console.log(data)
+
       if (!status) return [];
       else return data;
     },

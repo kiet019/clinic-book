@@ -41,12 +41,13 @@ import Footer from "./components/Footer";
 // Các import cho Admin
 import AdminLayout from './components/AdminLayout'; 
 import AdminDashboard from './pages/admin/AdminDashboard';
-import Specialities from './pages/admin/Specialities';
+import Appoiments from './pages/admin/Appointment';
 import DoctorList from './pages/admin/DoctorList';
 import PatientList from './pages/admin/PatientList';
 import TransactionsList from './pages/admin/TransactionsList';
 import Appointment from './pages/admin/Appointment';
 import ViewPrescription from "./pages/viewPrescription";
+import Medicines from "./pages/admin/Medicines";
 
 // Hook để kiểm tra route hiện tại
 function Layout() {
@@ -98,11 +99,11 @@ function Layout() {
         {/* Các route cho admin */}
         <Route path="/admin/*" element={<AdminLayout />}>
           <Route path="AdminDashboard" element={<AdminDashboard />} />
-          <Route path="specialities" element={<Specialities />} />
+          <Route path="Medicines" element={<Medicines />} />
           <Route path="DoctorList" element={<DoctorList />} />
           <Route path="PatientList" element={<PatientList />} />
           <Route path="TransactionsList" element={<TransactionsList />} />
-          <Route path="appointment" element={<Appointment />} />
+          <Route path="appointment" element={<Appoiments />} />
         </Route>
       </Routes>
 

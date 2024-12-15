@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useGetListDepartment } from "../../hook/useGetListDepartment";
+import { useGetListMedichine } from "../../hook/useGetListMedicine";
 import { useSnackbar } from "notistack";
 import { useFormik } from "formik";
 import { apiFetch } from "../../lib/apiFetch";
 
-function Appoiments() {
-  const { data, refetch } = useGetListDepartment();
+function Medicines() {
+  const { data, refetch } = useGetListMedichine();
   const { enqueueSnackbar } = useSnackbar();
 
   const [isUpdate, setIsUpdate] = useState(null);
@@ -28,18 +28,17 @@ function Appoiments() {
     setIsUpdate(null);
   };
 
-  const handleRegister = async (value) => {
+  const handleAdd = async (value) => {
     try {
       setIsLoading(true);
-      const { data, status } = await apiFetch("/departments", {
+      const { data, status } = await apiFetch("/medicines", {
         method: "POST",
         body: JSON.stringify(value),
       });
       if (!status) {
-    
         throw new Error(data);
       }
-      enqueueSnackbar("Đăng kí thành công", { variant: "success" });
+      enqueueSnackbar("Tạo thành công", { variant: "success" });
       refetch();
       setIsUpdate(null);
     } catch (error) {
@@ -54,7 +53,7 @@ function Appoiments() {
     try {
       setIsLoading(true);
       const { data, status } = await apiFetch(
-        "/departments/" + values.departmentId,
+        "/medicines/" + values.medicineId,
         {
           method: "PUT",
           body: JSON.stringify(value),
@@ -78,7 +77,7 @@ function Appoiments() {
   const handleDelete = async (id) => {
     try {
       setIsLoading(true);
-      const { data, status } = await apiFetch("/departments/" + id, {
+      const { data, status } = await apiFetch("/medicines/" + id, {
         method: "DELETE",
       });
       if (!status) {
@@ -96,10 +95,14 @@ function Appoiments() {
 
   const { values, handleChange, handleSubmit, setValues } = useFormik({
     initialValues: {
-      departmentId: 0,
-      name: "",
+      name: "string",
+      description: "string",
+      stock: 0,
+      manufacturer: "string",
+      unitPrice: 0,
+      expirationDate: "string",
     },
-    onSubmit: !isUpdate ? handleRegister : handleUpdate,
+    onSubmit: !isUpdate ? handleAdd : handleUpdate,
   });
 
   return (
@@ -111,12 +114,12 @@ function Appoiments() {
           <div className="page-header">
             <div className="row">
               <div className="col-sm-7 col-auto">
-                <h3 className="page-title">Chuyên Khoa</h3>
+                <h3 className="page-title">Thuốc</h3>
                 <ul className="breadcrumb">
                   <li className="breadcrumb-item">
                     <a href="index.html">Dashboard</a>
                   </li>
-                  <li className="breadcrumb-item active">Chuyên Khoa</li>
+                  <li className="breadcrumb-item active">Thuốc</li>
                 </ul>
               </div>
               <div className="col-sm-5 col">
@@ -139,8 +142,12 @@ function Appoiments() {
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>Chuyên Khoa</th>
-                          <th>Số bác sĩ</th>
+                          <th>Tên thuốc</th>
+                          <th>Hạn sử dụng</th>
+                          <th>Nhà cung cấp</th>
+                          <th className="text-right">Số lượng</th>
+                          <th className="text-right">Giá</th>
+                          <th>Mô tả</th>
                           <th className="text-right">Hành Động</th>
                         </tr>
                       </thead>
@@ -148,9 +155,13 @@ function Appoiments() {
                         {data &&
                           data.map((e, index) => (
                             <tr key={index}>
-                              <td>{e.departmentId}</td>
+                              <td>{e.medicineId}</td>
                               <td>{e.name}</td>
-                              <td>{e.doctorCount} Bác sĩ</td>
+                              <td>{e.expirationDate}</td>
+                              <td>{e.manufacturer}</td>
+                              <td className="text-right">{e.stock}</td>
+                              <td className="text-right">{e.unitPrice}</td>
+                              <td>{e.description}</td>
                               <td className="text-right">
                                 <button
                                   onClick={() => handleEditClick(e)}
@@ -161,7 +172,7 @@ function Appoiments() {
                                 <button
                                   data-toggle="modal"
                                   onClick={() => {
-                                    setDeleteId(e.departmentId);
+                                    setDeleteId(e.medicineId);
                                   }}
                                   className="btn btn-sm btn-danger"
                                 >
@@ -182,7 +193,7 @@ function Appoiments() {
       {/* /Page Wrapper */}
 
       {/* Add Modal */}
-      {isUpdate !== null && !isUpdate && (
+      {isUpdate !== null && (
         <div
           className="modal fade show"
           style={{ display: "block" }}
@@ -205,16 +216,89 @@ function Appoiments() {
               <div className="modal-body">
                 <form onSubmit={handleSubmit}>
                   <div className="row form-row">
-                    <div className="col-12 col-sm-12">
-                      <div className="form-group">
-                        <label>Chuyên Khoa</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          name="name"
-                          value={values.name}
-                          onChange={handleChange}
-                        />
+                    <div className="row form-row">
+                      <div className="col-md-12">
+                        <div className="form-group">
+                          <label>
+                            Tên Thuốc <span className="text-danger">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            name="name"
+                            value={values.name}
+                            onChange={handleChange}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-md-3">
+                        <div className="form-group">
+                          <label>
+                            Số lượng <span className="text-danger">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={values.stock}
+                            name="stock"
+                            onChange={handleChange}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-9">
+                        <div className="form-group">
+                          <label>Nhà cung cấp</label>
+                          <input
+                            type="text"
+                            value={values.manufacturer}
+                            name="manufacturer"
+                            onChange={handleChange}
+                            className="form-control"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-md-12">
+                        <div className="form-group">
+                          <label>
+                            Bio <span className="text-danger">*</span>
+                          </label>
+                          <textarea
+                            type="text"
+                            value={values.description}
+                            onChange={handleChange}
+                            name="description"
+                            className="form-control"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div className="form-group">
+                          <label>Giá</label>
+                          <input
+                            type="number"
+                            value={values.unitPrice}
+                            name="unitPrice"
+                            onChange={handleChange}
+                            className="form-control"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div className="form-group">
+                          <label>Hạn sử dụng</label>
+                          <div className="cal-icon">
+                            <input
+                              type="string"
+                              className="form-control datetimepicker"
+                              placeholder="yyyy-MM-dd"
+                              value={values.expirationDate}
+                              name="expirationDate"
+                              onChange={handleChange}
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -229,105 +313,8 @@ function Appoiments() {
       )}
       {/* /Add Modal */}
 
-      {/* Edit Details Modal */}
-      {isUpdate !== null && isUpdate && (
-        <div
-          className="modal fade show"
-          style={{ display: "block" }}
-          aria-hidden="true"
-          role="dialog"
-        >
-          <div className="modal-dialog modal-dialog-centered" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Chỉnh Sửa Chuyên Khoa</h5>
-                <button
-                  type="button"
-                  className="close"
-                  onClick={handleCloseModal}
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                <form onSubmit={handleSubmit}>
-                  <div className="row form-row">
-                    <div className="col-12 col-sm-12">
-                      <div className="form-group">
-                        <label>Chuyên Khoa</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={values.name}
-                          name="name"
-                          onChange={handleChange}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <button type="submit" className="btn btn-primary btn-block">
-                    Lưu Thay Đổi
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      {/* /Edit Details Modal */}
-
-      {/* Delete Modal */}
-      {deleteId && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
-          }}
-        >
-          <div className="modal-dialog modal-dialog-centered" role="document">
-            <div className="modal-content">
-              <div className="modal-body">
-                <div className="form-content p-2">
-                  <h4 className="modal-title">Xóa</h4>
-                  <p className="mb-4">Bạn có chắc chắn muốn xóa không?</p>
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={(e) => {
-                      handleDelete(deleteId);
-                      setDeleteId(null);
-                    }}
-                  >
-                    Đồng ý
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-danger"
-                    data-dismiss="modal"
-                    onClick={() => {
-                      setDeleteId(null);
-                    }}
-                  >
-                    Đóng
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      {/* /Delete Modal */}
     </>
   );
 }
 
-export default Appoiments;
+export default Medicines;

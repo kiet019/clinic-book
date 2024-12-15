@@ -11,7 +11,6 @@ export const useGetListDepartment = () => {
       const { data, status } = await apiFetch("/departments", {
         method: "GET",
       });
-      console.log(data)
       if (!status) return [];
       else return data;
     },
