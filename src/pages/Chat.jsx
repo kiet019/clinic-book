@@ -11,6 +11,7 @@ import { useGetListDoctor } from "../hook/useGetListDoctor";
 import { DoctorChat } from "../components/Card/DoctorChat";
 import { db } from "../firebase";
 import { useGetProfile } from "../hook/useGetProfile";
+import { apiFetch } from "../lib/apiFetch";
 
 function Chat() {
   const { data, isFetching } = useGetListDoctor();
@@ -24,7 +25,7 @@ function Chat() {
     let unsubscribe;
     setMessages([]);
 
-    if (selectedDoctor) {
+    if (selectedDoctor && selectedDoctor.doctorName !== "AI") {
       const messagesRef = ref(
         db,
         `chatRooms/${selectedDoctor.doctorName}/messages`
@@ -41,8 +42,12 @@ function Chat() {
     };
   }, [selectedDoctor]);
 
-  const sendMessage = () => {
-    if (selectedDoctor && newMessage.trim() !== "") {
+  const sendMessage = async () => {
+    if (
+      selectedDoctor &&
+      newMessage.trim() !== "" &&
+      selectedDoctor.doctorName !== "AI"
+    ) {
       const messagesRef = ref(
         db,
         `chatRooms/${selectedDoctor.doctorName}/messages`
@@ -69,6 +74,36 @@ function Chat() {
           );
         });
     }
+
+    if (
+      selectedDoctor &&
+      newMessage.trim() !== "" &&
+      selectedDoctor.doctorName === "AI"
+    ) {
+      try {
+        const res = await apiFetch("/chatbot/ask", {
+          method: "POST",
+          body: JSON.stringify({
+            audioFile: "",
+            chatRequest: {
+              userMessage: newMessage,
+            },
+          }),
+        });
+        const { data, status } = res;
+        if (!status) {
+          throw new Error(data);
+        }
+        setMessages([
+          ...messages,
+          { sender: "user", text: newMessage, timestamp: Date.now() },
+        ]);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setNewMessage("");
+      }
+    }
   };
 
   const handleKeyPress = (event) => {
@@ -76,7 +111,7 @@ function Chat() {
       sendMessage();
     }
   };
-  
+
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleTimeString(); // Format as time only
@@ -110,6 +145,9 @@ function Chat() {
                   <div className="chat-scroll">
                     <DoctorChat
                       doctor={{ doctorName: "AI", bio: "Chat AI" }}
+                      onSelect={() => {
+                        setSelectedDoctor({ doctorName: "AI", bio: "Chat AI" });
+                      }}
                       isDoctor={false}
                     />
                     {!isFetching &&
